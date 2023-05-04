@@ -4,6 +4,7 @@ import Login from './screen/Login';
 import Home from './screen/Home';
 import { useReactiveVar } from '@apollo/client';
 import { isLoggedInVar } from './apollo';
+import styled from 'styled-components';
 function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
 
@@ -12,8 +13,16 @@ function App() {
   //   setIsLoggedIn(false);
   // };
 
+  const Wrapper = styled.div`
+    width:1080px;
+    margin:0 auto;
+    background:#eee;
+  `;
+
+
+
   return (
-    <>
+    <Wrapper>
       <Router>
         <Switch>
           <Route path="/" exact>
@@ -29,7 +38,7 @@ function App() {
           </Route>
         </Switch>
       </Router>
-    </>
+    </Wrapper>
   );
 }
 
