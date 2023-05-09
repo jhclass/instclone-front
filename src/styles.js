@@ -1,18 +1,17 @@
-import { createGlobalStyle } from "styled-components"
+import { createGlobalStyle } from "styled-components";
 
 export const lightMode = {
-    fontColor: "#2c2c2c",
-    bgColor: "lightgray"
-}
+  fontColor: "#2c2c2c",
+  bgColor: "lightgray",
+};
 export const darkMode = {
-    fontColor: "lightgray",
-    bgColor: "black"
-
-}
+  fontColor: "lightgray",
+  bgColor: "black",
+};
 
 export const GlobalStyles = createGlobalStyle`
 body {
-    background-color: ${props => props.theme.bgColor};
+    font-size: 14px;
+    background-color: ${(props) => props.theme.bgColor};
 }
 `;
-
