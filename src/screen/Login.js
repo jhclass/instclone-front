@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // 추가된 부분
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import React from "react";
+import { Link } from "react-router-dom";
 
 import styled from "styled-components";
 
@@ -18,7 +19,7 @@ const Wrapper = styled.div`
 `;
 const WhiteBox = styled.div`
   background-color: white;
-  border: 1px solid rgb(219, 219, 219);
+  border: 1px solid ${(props) => props.theme.borderColor};
   padding: 20px;
 `;
 
@@ -36,19 +37,21 @@ const LogInForm = styled.form`
   display: flex;
   flex-direction: column;
   padding: 20px 0 10px 0;
-  input {
-    display: block;
-    width: 300px;
-    margin-bottom: 10px;
-    padding: 10px;
+`;
+const Input = styled.input`
+  display: block;
+  width: 300px;
+  margin-bottom: 10px;
+  padding: 10px;
 
-    border: 1px solid rgb(219, 219, 219);
-    &:last-child {
-      width: 322px;
-      background-color: #0095f6;
-      color: #fff;
-    }
-  }
+  border: 1px solid ${(props) => props.theme.borderColor};
+`;
+const Button = styled.input`
+  background-color: ${(props) => props.theme.blue};
+  color: #fff;
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 20px;
 `;
 const Login = () => {
   return (
@@ -59,9 +62,9 @@ const Login = () => {
             <FontAwesomeIcon icon={faInstagram} size="3x" />
           </div>
           <LogInForm>
-            <input type="text" placeholder="Username" />
-            <input type="password" placeholder="Password" />
-            <input type="submit" value="Log in" />
+            <Input type="text" placeholder="Username" />
+            <Input type="password" placeholder="Password" />
+            <Button type="submit" value="Log in" />
           </LogInForm>
           <div
             style={{
@@ -78,7 +81,7 @@ const Login = () => {
         </TopBox>
         <BottomBox>
           <span>
-            Don't have an account?&nbsp;<a href="#">회원가입</a>
+            Don't have an account?&nbsp;<Link to="/join">회원가입</Link>
           </span>
         </BottomBox>
       </Wrapper>

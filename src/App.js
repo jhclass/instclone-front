@@ -4,8 +4,9 @@ import Login from "./screen/Login";
 import Home from "./screen/Home";
 import { useReactiveVar } from "@apollo/client";
 import { isLoggedInVar, darkThemeVar } from "./apollo";
-import styled, { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components";
 import { darkMode, lightMode, GlobalStyles } from "./styles";
+import SignUp from "./screen/SignUp";
 
 function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
@@ -23,6 +24,9 @@ function App() {
         <Switch>
           <Route path="/" exact>
             {isLoggedIn ? <Home /> : <Login />}
+          </Route>
+          <Route path="/join">
+            <SignUp />
           </Route>
           {/*마지막에 넣어주는 것이 중요 404 not found.*/}
           <Route>
