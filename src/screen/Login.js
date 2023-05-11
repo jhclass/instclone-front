@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // 추가된 부분
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import AuthLayout from "../components/Auth/AuthLayout";
 import styled from "styled-components";
@@ -22,19 +22,45 @@ const BottomBox = styled(BaseBox)`
 `;
 
 const Login = () => {
+  const [inputValue, setInputValue] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const onChange = (e) => {
+    console.log(e.target.value);
+    setUsernameError("");
+    setInputValue(e.target.value);
+  };
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    if (inputValue.length < 10) {
+      setUsernameError("too Short!");
+    }
+    if (inputValue === "") {
+      setUsernameError("Not Empty plz.");
+    }
+  };
   return (
     <AuthLayout>
       <TopBox>
         <div style={{ padding: "20px 0" }}>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
-        <LoginForm>
-          <Input type="text" placeholder="Username" />
+        <LoginForm onSubmit={onSubmitHandler}>
+          <Input
+            type="text"
+            placeholder="Username"
+            onChange={onChange}
+            value={inputValue}
+          />
+          <span>{usernameError}</span>
           <Input type="password" placeholder="Password" />
-          <Button type="submit" value="Log in" />
+          <Button
+            type="submit"
+            value="Log in"
+            disabled={inputValue === "" || inputValue.length < 5}
+          />
         </LoginForm>
         <Separator>
-          <span>---- Or ----</span>
+          <span style={{ fontSize: 18, fontWeight: 600 }}>Or</span>
           <span>Log in with Facebook</span>
         </Separator>
       </TopBox>

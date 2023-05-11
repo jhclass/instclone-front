@@ -5,7 +5,7 @@ const SLogInForm = styled.form`
   padding: 20px 0 10px 0;
 `;
 
-const LoginForm = ({ children }) => {
-  return <SLogInForm>{children}</SLogInForm>;
+const LoginForm = ({ children, onSubmit }) => {
+  return <SLogInForm onSubmit={onSubmit}>{children}</SLogInForm>;
 };
 export default LoginForm;
