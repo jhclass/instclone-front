@@ -9,6 +9,7 @@ import { BaseBox } from "../components/shared";
 import Button from "../components/Auth/Buttton";
 import Input from "../components/Auth/Input";
 import LoginForm from "../components/Auth/LoginForm";
+import Separator from "../components/Auth/Separator";
 const TopBox = styled(BaseBox)`
   display: flex;
   justify-content: center;
@@ -32,18 +33,10 @@ const Login = () => {
           <Input type="password" placeholder="Password" />
           <Button type="submit" value="Log in" />
         </LoginForm>
-        <div
-          style={{
-            lineHeight: 1.5,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <span>Or</span>
+        <Separator>
+          <span>---- Or ----</span>
           <span>Log in with Facebook</span>
-        </div>
+        </Separator>
       </TopBox>
       <BottomBox>
         <span>

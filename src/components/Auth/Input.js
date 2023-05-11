@@ -1,5 +1,5 @@
 import styled from "styled-components";
-const SInput = styled.input`
+const Input = styled.input`
   display: block;
   width: 300px;
   margin-bottom: 10px;
@@ -7,7 +7,7 @@ const SInput = styled.input`
 
   border: 1px solid ${(props) => props.theme.borderColor};
 `;
-const Input = (props) => {
-  return <SInput {...props} />;
-};
+// const Input = (props) => {
+//   return <SInput {...props} />;
+// };
 export default Input;
