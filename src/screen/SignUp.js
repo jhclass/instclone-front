@@ -10,6 +10,7 @@ import Button from "../components/Auth/Buttton";
 import Input from "../components/Auth/Input";
 import LoginForm from "../components/Auth/LoginForm";
 import Separator from "../components/Auth/Separator";
+import PageTitle from "../components/PageTitle";
 const TopBox = styled(BaseBox)`
   display: flex;
   justify-content: center;
@@ -31,6 +32,7 @@ const SubTitle = styled.div`
 const SignUp = () => {
   return (
     <AuthLayout>
+      <PageTitle title={"Join"} />
       <TopBox>
         <div style={{ padding: "20px 0" }}>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
