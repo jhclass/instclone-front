@@ -12,6 +12,7 @@ import LoginForm from "../components/Auth/LoginForm";
 import Separator from "../components/Auth/Separator";
 
 import PageTitle from "../components/PageTitle";
+import { useForm } from "react-hook-form";
 const TopBox = styled(BaseBox)`
   display: flex;
   justify-content: center;
@@ -24,21 +25,18 @@ const BottomBox = styled(BaseBox)`
 `;
 
 const Login = () => {
-  const [inputValue, setInputValue] = useState("");
-  const [usernameError, setUsernameError] = useState("");
-  const onChange = (e) => {
-    console.log(e.target.value);
-    setUsernameError("");
-    setInputValue(e.target.value);
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  console.log("watch", watch());
+  const onSubmitValid = (data) => {
+    console.log(data);
   };
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    if (inputValue.length < 10) {
-      setUsernameError("too Short!");
-    }
-    if (inputValue === "") {
-      setUsernameError("Not Empty plz.");
-    }
+  const onSubmitInValid = (data) => {
+    console.log(data, "invalid");
   };
   return (
     <AuthLayout>
@@ -47,20 +45,38 @@ const Login = () => {
         <div style={{ padding: "20px 0" }}>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
-        <LoginForm onSubmit={onSubmitHandler}>
+        <LoginForm onSubmit={handleSubmit(onSubmitValid, onSubmitInValid)}>
           <Input
+            {...register("username", {
+              required: "Username is requiered",
+              minLength: {
+                value: 5,
+                message: "아이디는 다섯글자 이상으로 작성하여주세요",
+              },
+              //validate
+              pattern: {
+                value: /.*[@].*/,
+                message: "이메일전체를 작성하여주세요",
+              },
+            })}
+            name="username"
             type="text"
             placeholder="Username"
-            onChange={onChange}
-            value={inputValue}
           />
-          <span>{usernameError}</span>
-          <Input type="password" placeholder="Password" />
-          <Button
-            type="submit"
-            value="Log in"
-            disabled={inputValue === "" || inputValue.length < 5}
+          {errors.username ? <p>{errors.username.message}</p> : null}
+          <Input
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 5,
+                message: "패스워드는 5자 이상으로 작성하여주세요.",
+              },
+            })}
+            name="password"
+            type="password"
+            placeholder="Password"
           />
+          <Button type="submit" value="Log in" />
         </LoginForm>
         <Separator>
           <span style={{ fontSize: 18, fontWeight: 600 }}>Or</span>
