@@ -10,7 +10,7 @@ import Button from "../components/Auth/Buttton";
 import Input from "../components/Auth/Input";
 import LoginForm from "../components/Auth/LoginForm";
 import Separator from "../components/Auth/Separator";
-
+import FormError from "../components/Auth/FormError";
 import PageTitle from "../components/PageTitle";
 import { useForm } from "react-hook-form";
 const TopBox = styled(BaseBox)`
@@ -30,14 +30,15 @@ const Login = () => {
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ mode: "onChange" });
   console.log("watch", watch());
   const onSubmitValid = (data) => {
     console.log(data);
   };
-  const onSubmitInValid = (data) => {
-    console.log(data, "invalid");
-  };
+  // const onSubmitInValid = (data) => {
+  //   console.log(data, "invalid");
+  // };
+
   return (
     <AuthLayout>
       <PageTitle title="Login" />
@@ -45,7 +46,7 @@ const Login = () => {
         <div style={{ padding: "20px 0" }}>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
-        <LoginForm onSubmit={handleSubmit(onSubmitValid, onSubmitInValid)}>
+        <LoginForm onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             {...register("username", {
               required: "Username is requiered",
@@ -62,8 +63,11 @@ const Login = () => {
             name="username"
             type="text"
             placeholder="Username"
+            hasError={Boolean(errors.username)}
           />
-          {errors.username ? <p>{errors.username.message}</p> : null}
+          {errors.username ? (
+            <FormError message={errors.username.message} />
+          ) : null}
           <Input
             {...register("password", {
               required: "Password is required",
@@ -75,8 +79,23 @@ const Login = () => {
             name="password"
             type="password"
             placeholder="Password"
+            hasError={Boolean(errors.password)}
           />
-          <Button type="submit" value="Log in" />
+
+          {errors.password ? (
+            <FormError message={errors.password.message} />
+          ) : null}
+          <Button
+            type="submit"
+            value="Log in"
+            //disabled={errors.username && errors.password ? true : false}
+            //위에 처럼 쓸경우에는 폼요소가 많을 경우에는?? 그래서 아래처럼 쓸 수 있지..!
+            disabled={
+              Object.keys(errors).length > 0 ||
+              !watch("username") ||
+              !watch("password")
+            }
+          />
         </LoginForm>
         <Separator>
           <span style={{ fontSize: 18, fontWeight: 600 }}>Or</span>

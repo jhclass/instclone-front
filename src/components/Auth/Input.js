@@ -2,10 +2,17 @@ import styled from "styled-components";
 const Input = styled.input`
   display: block;
   width: 300px;
-  margin-bottom: 10px;
+  margin-top: 10px;
   padding: 10px;
 
-  border: 1px solid ${(props) => props.theme.borderColor};
+  border: 1px solid
+    ${(props) => (props.hasError ? "red" : props.theme.borderColor)};
+  &:focus {
+    border: 1px solid rgb(38, 38, 38);
+  }
+  &:nth-of-type(1) {
+    margin-top: 0;
+  }
 `;
 // const Input = (props) => {
 //   return <SInput {...props} />;
