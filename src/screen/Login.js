@@ -13,6 +13,7 @@ import Separator from "../components/Auth/Separator";
 import FormError from "../components/Auth/FormError";
 import PageTitle from "../components/PageTitle";
 import { useForm } from "react-hook-form";
+import { gql, useMutation } from "@apollo/client";
 const TopBox = styled(BaseBox)`
   display: flex;
   justify-content: center;
@@ -24,22 +25,48 @@ const BottomBox = styled(BaseBox)`
   text-align: center;
 `;
 
+const LOGIN_MUTATION = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      ok
+      token
+      error
+    }
+  }
+`;
+
 const Login = () => {
   const {
     register,
     watch,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm({ mode: "onChange" });
   console.log("watch", watch());
-  const onSubmitValid = (data) => {
+  const onCompleted = (data) => {
     console.log(data);
   };
-
+  const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+    onCompleted,
+  });
   // const onSubmitInValid = (data) => {
   //   console.log(data, "invalid");
   // };
-
+  const onSubmitValid = (data) => {
+    //console.log(data);
+    const { username, password } = getValues();
+    console.log(username);
+    if (loading) {
+      return;
+    }
+    login({
+      variables: {
+        username,
+        password,
+      },
+    });
+  };
   return (
     <AuthLayout>
       <PageTitle title="Login" />
@@ -52,14 +79,14 @@ const Login = () => {
             {...register("username", {
               required: "Username is requiered",
               minLength: {
-                value: 5,
+                value: 3,
                 message: "아이디는 다섯글자 이상으로 작성하여주세요",
               },
               //validate
-              pattern: {
-                value: /.*[@].*/,
-                message: "이메일전체를 작성하여주세요",
-              },
+              // pattern: {
+              //   value: /.*[@].*/,
+              //   message: "이메일전체를 작성하여주세요",
+              // },
             })}
             name="username"
             type="text"
@@ -88,13 +115,14 @@ const Login = () => {
           ) : null}
           <Button
             type="submit"
-            value="Log in"
+            value={loading ? "Loading..." : "Log in"}
             //disabled={errors.username && errors.password ? true : false}
             //위에 처럼 쓸경우에는 폼요소가 많을 경우에는?? 그래서 아래처럼 쓸 수 있지..!
             disabled={
               Object.keys(errors).length > 0 ||
               !watch("username") ||
-              !watch("password")
+              !watch("password") ||
+              loading
             }
           />
         </LoginForm>
