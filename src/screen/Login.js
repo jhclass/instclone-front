@@ -42,10 +42,19 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
     getValues,
+    setError,
   } = useForm({ mode: "onChange" });
   console.log("watch", watch());
   const onCompleted = (data) => {
     console.log(data);
+    const {
+      login: { ok, error, token },
+    } = data;
+    if (!ok) {
+      setError("result", {
+        message: error,
+      });
+    }
   };
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
     onCompleted,
@@ -67,6 +76,7 @@ const Login = () => {
       },
     });
   };
+  console.log(Object.keys(errors).length);
   return (
     <AuthLayout>
       <PageTitle title="Login" />
@@ -118,13 +128,9 @@ const Login = () => {
             value={loading ? "Loading..." : "Log in"}
             //disabled={errors.username && errors.password ? true : false}
             //위에 처럼 쓸경우에는 폼요소가 많을 경우에는?? 그래서 아래처럼 쓸 수 있지..!
-            disabled={
-              Object.keys(errors).length > 0 ||
-              !watch("username") ||
-              !watch("password") ||
-              loading
-            }
+            disabled={!watch("username") || !watch("password") || loading}
           />
+          <FormError message={errors?.result?.message} />
         </LoginForm>
         <Separator>
           <span style={{ fontSize: 18, fontWeight: 600 }}>Or</span>
