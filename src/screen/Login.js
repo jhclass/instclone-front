@@ -55,6 +55,10 @@ const Login = () => {
         message: error,
       });
     }
+    console.log(token);
+    if (token) {
+      localStorage.setItem("token", token);
+    }
   };
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
     onCompleted,
