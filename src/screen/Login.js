@@ -14,6 +14,7 @@ import FormError from "../components/Auth/FormError";
 import PageTitle from "../components/PageTitle";
 import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
+import { LogUserIn } from "../apollo";
 const TopBox = styled(BaseBox)`
   display: flex;
   justify-content: center;
@@ -57,7 +58,7 @@ const Login = () => {
     }
     console.log(token);
     if (token) {
-      localStorage.setItem("token", token);
+      LogUserIn(token);
     }
   };
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
