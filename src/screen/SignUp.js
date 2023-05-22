@@ -11,6 +11,9 @@ import Input from "../components/Auth/Input";
 import LoginForm from "../components/Auth/LoginForm";
 import Separator from "../components/Auth/Separator";
 import PageTitle from "../components/PageTitle";
+import { useForm } from "react-hook-form";
+import FormError from "../components/Auth/FormError";
+import { gql, useMutation } from "@apollo/client";
 const TopBox = styled(BaseBox)`
   display: flex;
   justify-content: center;
@@ -29,7 +32,50 @@ const SubTitle = styled.div`
   font-weight: bold;
 `;
 
+const CREATE_ACCOUNT_MUTATION = gql`
+  mutation CreateAccount(
+    $username: String!
+    $password: String!
+    $firstName: String!
+    $email: String!
+  ) {
+    createAccount(
+      username: $username
+      password: $password
+      firstName: $firstName
+      email: $email
+    ) {
+      ok
+
+      error
+    }
+  }
+`;
+
 const SignUp = () => {
+  const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    getValues,
+    setError,
+  } = useForm({ mode: "onChange" });
+
+  console.log(watch());
+  const onSubmitValid = (data) => {
+    if (loading) {
+      return;
+    }
+
+    createAccount({
+      variables: {
+        ...data,
+      },
+    });
+    console.log(data, "데이터");
+  };
   return (
     <AuthLayout>
       <PageTitle title={"Join"} />
@@ -45,15 +91,63 @@ const SignUp = () => {
           </span>
         </Separator>
 
-        <LoginForm>
-          <Input type="text" placeholder="Username" />
-          <Input type="text" placeholder="First name" />
-          <Input type="text" placeholder="Last name" />
-          <Input type="password" placeholder="Password" />
-          <Input type="password" placeholder="1 more write password plz." />
-          <Input type="password" placeholder="email" />
-
-          <Button type="submit" value="Sign up !" />
+        <LoginForm onSubmit={handleSubmit(onSubmitValid)}>
+          <Input
+            {...register("username", {
+              required: "아이디는 필수입니다.",
+            })}
+            name="username"
+            type="text"
+            placeholder="Username"
+          />
+          <Input
+            {...register("firstName", {
+              required: "이름이 없습니다.",
+            })}
+            name="firstName"
+            type="text"
+            placeholder="First name"
+          />
+          <Input
+            {...register("lastName", {
+              required: "성이 없습니다.",
+            })}
+            name="lastName"
+            type="text"
+            placeholder="Last name"
+          />
+          <Input
+            {...register("password", {
+              required: "비밀번호가 없습니다.",
+            })}
+            name="password"
+            type="password"
+            placeholder="Password"
+          />
+          <Input
+            {...register("password2", {
+              required: "비밀번호2가 없습니다.",
+            })}
+            name="password2"
+            type="password"
+            placeholder="1 more write password plz."
+          />
+          <Input
+            {...register("email", {
+              required: "이메일 주소는 필수 입니다.",
+            })}
+            type="text"
+            name="email"
+            placeholder="email"
+          />
+          <Button
+            type="submit"
+            value={loading ? "Loading..." : "Sign up"}
+            //disabled={errors.username && errors.password ? true : false}
+            //위에 처럼 쓸경우에는 폼요소가 많을 경우에는?? 그래서 아래처럼 쓸 수 있지..!
+            disabled={!watch("username") || !watch("password") || loading}
+          />
+          <FormError message={errors?.result?.message} />
         </LoginForm>
       </TopBox>
       <BottomBox>
