@@ -21,10 +21,12 @@ const TopBox = styled(BaseBox)`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background-color: ${(props) => props.theme.formBoxColor};
 `;
 const BottomBox = styled(BaseBox)`
   margin-top: 20px;
   text-align: center;
+  background-color: ${(props) => props.theme.formBoxColor};
 `;
 
 const LOGIN_MUTATION = gql`

@@ -5,12 +5,14 @@ export const lightMode = {
   bgColor: "lightgray",
   blue: "#0095f6",
   borderColor: "rgb(219,219,219)",
+  formBoxColor: "#ffffff",
 };
 export const darkMode = {
   fontColor: "lightgray",
-  bgColor: "black",
+  bgColor: "#2c2c2c",
   blue: "#0095f6",
   borderColor: "rgb(219,219,219)",
+  formBoxColor: "#2c2c2c",
 };
 
 export const GlobalStyles = createGlobalStyle`
@@ -23,5 +25,6 @@ input {
 body {
     font-size: 14px;
     background-color: ${(props) => props.theme.bgColor};
+    color:${(props) => props.theme.fontColor}
 }
 `;
