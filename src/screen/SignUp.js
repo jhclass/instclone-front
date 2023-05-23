@@ -14,6 +14,7 @@ import PageTitle from "../components/PageTitle";
 import { useForm } from "react-hook-form";
 import FormError from "../components/Auth/FormError";
 import { gql, useMutation } from "@apollo/client";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 const TopBox = styled(BaseBox)`
   display: flex;
   justify-content: center;
@@ -53,7 +54,26 @@ const CREATE_ACCOUNT_MUTATION = gql`
 `;
 
 const SignUp = () => {
-  const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION);
+  const history = useHistory();
+  const onCompleted = (data) => {
+    const { username, password } = getValues();
+    //console.log("vluse", values);
+    const {
+      createAccount: { ok, error },
+    } = data;
+    if (!ok) {
+      alert(error);
+      return;
+    }
+    history.push(Routes.Home, {
+      message: "회원가입이 완료되었습니다. 로그인 해주세요.",
+      password,
+      username,
+    });
+  };
+  const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
+    onCompleted,
+  });
   const {
     register,
     handleSubmit,
@@ -158,7 +178,7 @@ const SignUp = () => {
               required: "비밀번호2가 없습니다.",
               validate: (value) => {
                 return value === getValues("password")
-                  ? ""
+                  ? null
                   : "비밀번호가 일치하지 않습니다.";
               },
             })}

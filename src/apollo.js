@@ -11,10 +11,11 @@ export const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 export const LogUserIn = (token) => {
-  const setToken = localStorage.setItem(TOKEN, token);
+  localStorage.setItem(TOKEN, token);
   isLoggedInVar(true);
 };
-export const LogUserOut = () => {
+export const LogUserOut = (history) => {
   localStorage.removeItem(TOKEN);
-  isLoggedInVar(false);
+  history?.replace();
+  window.location.reload();
 };

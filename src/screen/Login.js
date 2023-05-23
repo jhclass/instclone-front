@@ -15,6 +15,7 @@ import PageTitle from "../components/PageTitle";
 import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
 import { LogUserIn } from "../apollo";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 const TopBox = styled(BaseBox)`
   display: flex;
   justify-content: center;
@@ -37,6 +38,10 @@ const LOGIN_MUTATION = gql`
 `;
 
 const Login = () => {
+  // signup 에서 로그인 확인 후 메세지 가져오기
+  const location = useLocation();
+  //console.log("loca", location);
+
   const {
     register,
     watch,
@@ -44,7 +49,13 @@ const Login = () => {
     formState: { errors },
     getValues,
     setError,
-  } = useForm({ mode: "onChange" });
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      username: location?.state?.username || "",
+      password: location?.state?.password || "",
+    },
+  });
   console.log("watch", watch());
   const onCompleted = (data) => {
     console.log(data);
@@ -89,6 +100,7 @@ const Login = () => {
         <div style={{ padding: "20px 0" }}>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
+        <span>{location?.state?.message}</span>
         <LoginForm onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             {...register("username", {
