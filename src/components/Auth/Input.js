@@ -8,7 +8,7 @@ const Input = styled.input`
   border: 1px solid
     ${(props) => (props.hasError ? "red" : props.theme.borderColor)};
   &:focus {
-    border: 1px solid rgb(38, 38, 38);
+    border: 1px solid ${(props) => props.theme.focusBorderColor};
   }
   &:nth-of-type(1) {
     margin-top: 0;
