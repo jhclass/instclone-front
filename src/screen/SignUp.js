@@ -85,7 +85,7 @@ const SignUp = () => {
     setError,
   } = useForm({ mode: "onChange" });
 
-  console.log(watch());
+  //console.log(watch());
   const onSubmitValid = (data) => {
     if (loading) {
       return;
@@ -96,7 +96,7 @@ const SignUp = () => {
         ...data,
       },
     });
-    console.log(data, "데이터");
+    //console.log(data, "데이터");
   };
   return (
     <AuthLayout>

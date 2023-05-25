@@ -58,9 +58,9 @@ const Login = () => {
       password: location?.state?.password || "",
     },
   });
-  console.log("watch", watch());
+  //console.log("watch", watch());
   const onCompleted = (data) => {
-    console.log(data);
+    //console.log(data);
     const {
       login: { ok, error, token },
     } = data;
@@ -69,7 +69,7 @@ const Login = () => {
         message: error,
       });
     }
-    console.log(token);
+    //console.log(token);
     if (token) {
       LogUserIn(token);
     }
@@ -83,7 +83,7 @@ const Login = () => {
   const onSubmitValid = (data) => {
     //console.log(data);
     const { username, password } = getValues();
-    console.log(username);
+    //console.log(username);
     if (loading) {
       return;
     }
