@@ -23,10 +23,15 @@ const Logo = styled.div`
   box-sizing: border-box;
 `;
 const Nav = styled.div`
+  display: flex;
+  align-items: center;
   box-sizing: border-box;
   cursor: pointer;
   svg {
-    margin-left: 20px;
+    margin-left: 30px;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
   }
 `;
 const Button = styled.span`
@@ -37,10 +42,23 @@ const Button = styled.span`
   font-weight: 600;
 `;
 
+const User = styled.div`
+  vertical-align: middle;
+  width: 34px;
+  height: 34px;
+  margin-left: 40px;
+  border-radius: 100%;
+  overflow: hidden;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  img {
+    width: 100%;
+  }
+`;
+
 const Header = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
-  const loggedInUser = useUser();
-  console.log("로그인", loggedInUser);
+  const { data } = useUser();
+  console.log("로그인", data?.me?.avatar);
   return (
     <SHeader>
       <Wrapper>
@@ -55,9 +73,15 @@ const Header = () => {
             {isLoggedIn ? (
               <>
                 {" "}
-                <FontAwesomeIcon icon={faHome} size="lg" />
-                <FontAwesomeIcon icon={faCompass} size="lg" />
-                <FontAwesomeIcon icon={faUser} size="lg" />
+                <FontAwesomeIcon icon={faHome} />
+                <FontAwesomeIcon icon={faCompass} />
+                {data?.me?.avatar ? (
+                  <User>
+                    <img src={data?.me?.avatar} alt={data?.me?.username} />
+                  </User>
+                ) : (
+                  <FontAwesomeIcon icon={faUser} />
+                )}
               </>
             ) : (
               <Link to={Routes.Login}>
