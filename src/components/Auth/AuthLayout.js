@@ -1,7 +1,7 @@
 import { useReactiveVar } from "@apollo/client";
 import { faMoon, faSun } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { Wrapper } from "../../styles";
 import styled from "styled-components";
 import { darkThemeVar, disableDarkmode, enableDarkMode } from "../../apollo";
 const Container = styled.div`
@@ -11,10 +11,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-`;
-const Wrapper = styled.div`
-  max-width: 350px;
-  width: 100%;
 `;
 
 const Footer = styled.div`

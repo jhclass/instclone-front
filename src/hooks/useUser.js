@@ -18,7 +18,7 @@ const useUser = () => {
   const { data, error } = useQuery(ME_QUERY, {
     skip: !hasToken, //false 라면
   });
-  console.log("sending data", data);
+  //console.log("sending data", data);
   useEffect(() => {
     if (data?.me === null) {
       //console.log("there is data", data);

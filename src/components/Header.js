@@ -1,5 +1,5 @@
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { faCompass, faUser } from "@fortawesome/free-regular-svg-icons";
+import { faCompass } from "@fortawesome/free-regular-svg-icons";
 import useUser from "../hooks/useUser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom/cjs/react-router-dom";
@@ -21,6 +21,9 @@ const HeaderContainer = styled.div`
 const Logo = styled.div`
   cursor: pointer;
   box-sizing: border-box;
+  svg {
+    height: 34px;
+  }
 `;
 const Nav = styled.div`
   display: flex;
@@ -28,7 +31,7 @@ const Nav = styled.div`
   box-sizing: border-box;
   cursor: pointer;
   svg {
-    margin-left: 30px;
+    margin-left: 26px;
     width: 20px;
     height: 20px;
     vertical-align: middle;
@@ -46,7 +49,7 @@ const User = styled.div`
   vertical-align: middle;
   width: 34px;
   height: 34px;
-  margin-left: 40px;
+  margin-left: 26px;
   border-radius: 100%;
   overflow: hidden;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
@@ -58,14 +61,14 @@ const User = styled.div`
 const Header = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   const { data } = useUser();
-  console.log("로그인", data?.me?.avatar);
+  // console.log("로그인", data?.me?.avatar);
   return (
     <SHeader>
       <Wrapper>
         <HeaderContainer>
           <Logo>
             <Link to={Routes.Home}>
-              <FontAwesomeIcon icon={faInstagram} size="2x" />
+              <FontAwesomeIcon icon={faInstagram} />
             </Link>
           </Logo>
           {/**로고 */}
@@ -80,7 +83,9 @@ const Header = () => {
                     <img src={data?.me?.avatar} alt={data?.me?.username} />
                   </User>
                 ) : (
-                  <FontAwesomeIcon icon={faUser} />
+                  <User>
+                    <img src="./img/defaultUser.png" alt={data?.me?.username} />
+                  </User>
                 )}
               </>
             ) : (

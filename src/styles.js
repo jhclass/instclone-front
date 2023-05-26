@@ -22,6 +22,12 @@ export const Wrapper = styled.div`
   max-width: 1080px;
   margin: 0 auto;
 `;
+
+export const FormWrap = styled.div`
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+`;
 export const GlobalStyles = createGlobalStyle`
 input {
   all:unset;
