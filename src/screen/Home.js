@@ -13,6 +13,7 @@ import {
   faMessage,
   faPaperPlane,
 } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faPlane } from "@fortawesome/free-solid-svg-icons";
 
 const PhotoContainer = styled.div`
@@ -41,7 +42,18 @@ const Username = styled(FatText)`
   color: ${(props) => props.theme.fontColor};
 `;
 
-const FeedIcon = styled(FeedPadding)``;
+const FeedIcon = styled(FeedPadding)`
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 5px;
+  cursor: pointer;
+  div {
+    display: flex;
+    font-size: 20px;
+    align-items: center;
+    color: ${(props) => props.theme.fontColor};
+  }
+`;
 const FeedPhoto = styled(FeedPadding)`
   width: 100%;
 `;
@@ -58,7 +70,14 @@ const SeeDetails = styled.span`
   font-size: 12px;
   color: ${(props) => props.theme.fontColor};
 `;
-
+const PhotoAction = styled.div`
+  margin-right: 20px;
+`;
+const Likes = styled(FatText)`
+  display: block;
+  margin-bottom: 10px;
+  color: #ff5252;
+`;
 const FEED_QUERY = gql`
   query seeFeed {
     seeFeed {
@@ -73,6 +92,7 @@ const FEED_QUERY = gql`
       }
       likes
       file
+      isLiked
     }
   }
 `;
@@ -80,7 +100,7 @@ const FEED_QUERY = gql`
 const Home = () => {
   const history = useHistory();
   const { data } = useQuery(FEED_QUERY);
-  console.log(data);
+  //console.log(data);
   return (
     <Wrapper>
       <h1>home1</h1>
@@ -108,14 +128,26 @@ const Home = () => {
               </FeedPhoto>
               <FeedIcon>
                 <div>
-                  <FontAwesomeIcon icon={faHeart} />
-                  <FontAwesomeIcon icon={faComment} />
-                  <FontAwesomeIcon icon={faPaperPlane} />
+                  <PhotoAction>
+                    <FontAwesomeIcon
+                      style={{ color: photo.isLiked ? "red" : "inherit" }}
+                      icon={photo.isLiked ? SolidHeart : faHeart}
+                    />
+                  </PhotoAction>
+                  <PhotoAction>
+                    <FontAwesomeIcon icon={faComment} />
+                  </PhotoAction>
+                  <PhotoAction>
+                    <FontAwesomeIcon icon={faPaperPlane} />
+                  </PhotoAction>
                 </div>
                 <div>
                   <FontAwesomeIcon icon={faBookmark} />
                 </div>
               </FeedIcon>
+              {photo.likes == 0 ? null : (
+                <Likes>{photo.likes} 명의 좋아요가 있습니다.</Likes>
+              )}
               <FeedCaption>
                 <span>
                   {photo.caption.length > 25
