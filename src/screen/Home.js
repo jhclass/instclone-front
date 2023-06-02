@@ -13,7 +13,7 @@ const PhotoContainer = styled.div`
   justify-content: center;
 `;
 
-const FEED_QUERY = gql`
+export const FEED_QUERY = gql`
   query seeFeed {
     seeFeed {
       id
@@ -41,15 +41,16 @@ const Home = () => {
       <h1>home1</h1>
       <button onClick={() => LogUserOut(history)}> logout!</button>
       <PhotoContainer>
-        {data?.seeFeed?.map((photo, index) => (
+        {data?.seeFeed?.map((photo) => (
           <Photo
-            key={index + photo.user.username}
+            key={photo.id}
             username={photo.user.username}
             file={photo.file}
             isLiked={photo.isLiked}
             avatar={photo.user.avatar}
             likes={photo.likes}
             caption={photo.caption}
+            id={photo.id}
           />
         ))}
       </PhotoContainer>

@@ -11,6 +11,10 @@ import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
 
 import { FatText } from "../shared";
 import Avatar from "../Auth/Avartar";
+import { gql } from "apollo-client-preset";
+import { useMutation } from "@apollo/client";
+import { FEED_QUERY } from "../../screen/Home";
+
 const FeedBox = styled.div`
   padding: 10px;
   width: 100%;
@@ -60,16 +64,36 @@ const SeeDetails = styled.span`
 `;
 const PhotoAction = styled.div`
   margin-right: 20px;
+  cursor: pointer;
 `;
 const Likes = styled(FatText)`
   display: block;
   margin-bottom: 10px;
   color: #ff5252;
 `;
-
-const Photo = ({ key, username, avatar, file, isLiked, likes, caption }) => {
+const TOGGLE_LIKE_MUTATION = gql`
+  mutation toggleLike($id: Int!) {
+    toggleLike(id: $id) {
+      ok
+      error
+    }
+  }
+`;
+const Photo = ({ id, username, avatar, file, isLiked, likes, caption }) => {
+  // const datachk = (data) => {
+  //   console.log(data, "datachk");
+  // };
+  //console.log(id);
+  const [toggleLikes, { loading }] = useMutation(TOGGLE_LIKE_MUTATION, {
+    variables: {
+      id: id,
+    },
+    //onCompleted: datachk,
+    refetchQueries: [{ query: FEED_QUERY }],
+  });
+  //console.log(toggleLikeMutation);
   return file !== null ? (
-    <FeedBox key={key}>
+    <FeedBox>
       <FeedHead>
         {avatar ? (
           <Avatar src={avatar} alt={username} />
@@ -83,7 +107,7 @@ const Photo = ({ key, username, avatar, file, isLiked, likes, caption }) => {
       </FeedPhoto>
       <FeedIcon>
         <div>
-          <PhotoAction>
+          <PhotoAction onClick={toggleLikes}>
             <FontAwesomeIcon
               style={{ color: isLiked ? "red" : "inherit" }}
               icon={isLiked ? SolidHeart : faHeart}
@@ -100,7 +124,7 @@ const Photo = ({ key, username, avatar, file, isLiked, likes, caption }) => {
           <FontAwesomeIcon icon={faBookmark} />
         </div>
       </FeedIcon>
-      {likes == 0 ? null : <Likes>{likes} 명의 좋아요가 있습니다.</Likes>}
+      {likes === 0 ? null : <Likes>{likes} 명의 좋아요가 있습니다.</Likes>}
       <FeedCaption>
         <span>
           {caption.length > 25 ? `${caption.slice(0, 25)}...` : caption}
@@ -114,9 +138,10 @@ const Photo = ({ key, username, avatar, file, isLiked, likes, caption }) => {
   ) : null;
 };
 Photo.propTypes = {
-  key: PropTypes.number.isRequired,
+  id: PropTypes.number.isRequired,
+
   username: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
+  avatar: PropTypes.string,
   file: PropTypes.string.isRequired,
   isLiked: PropTypes.bool.isRequired,
   likes: PropTypes.number.isRequired,
