@@ -5,6 +5,7 @@ import { useQuery, gql } from "@apollo/client";
 import styled from "styled-components";
 import { Wrapper } from "../styles";
 import Photo from "../components/feed/Photo";
+import PageTitle from "../components/PageTitle";
 
 const PhotoContainer = styled.div`
   display: flex;
@@ -13,7 +14,7 @@ const PhotoContainer = styled.div`
   justify-content: center;
 `;
 
-export const FEED_QUERY = gql`
+const FEED_QUERY = gql`
   query seeFeed {
     seeFeed {
       id
@@ -38,6 +39,7 @@ const Home = () => {
   //console.log(data);
   return (
     <Wrapper>
+      <PageTitle title="Home" />
       <h1>home1</h1>
       <button onClick={() => LogUserOut(history)}> logout!</button>
       <PhotoContainer>

@@ -13,7 +13,6 @@ import { FatText } from "../shared";
 import Avatar from "../Auth/Avartar";
 import { gql } from "apollo-client-preset";
 import { useMutation } from "@apollo/client";
-import { FEED_QUERY } from "../../screen/Home";
 
 const FeedBox = styled.div`
   padding: 10px;
@@ -84,12 +83,36 @@ const Photo = ({ id, username, avatar, file, isLiked, likes, caption }) => {
   //   console.log(data, "datachk");
   // };
   //console.log(id);
-  const [toggleLikes, { loading }] = useMutation(TOGGLE_LIKE_MUTATION, {
+  const updateToggleLike = (cache, result) => {
+    console.log(cache, result);
+    const {
+      data: {
+        toggleLike: { ok },
+      },
+    } = result;
+    //console.log(ok);
+    if (ok) {
+      //console.log("toggleLike 가 제대로 동작함.");
+      cache.writeFragment({
+        id: `Photo:${id}`,
+        fragment: gql`
+          fragment BSName on Photo {
+            isLiked
+          }
+        `,
+        data: {
+          isLiked: !isLiked,
+        },
+      });
+    }
+  };
+  const [toggleLikes] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {
       id: id,
     },
     //onCompleted: datachk,
-    refetchQueries: [{ query: FEED_QUERY }],
+    //refetchQueries: [{ query: FEED_QUERY }],
+    update: updateToggleLike,
   });
   //console.log(toggleLikeMutation);
   return file !== null ? (
