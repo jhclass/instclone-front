@@ -94,21 +94,28 @@ const Photo = ({ id, username, avatar, file, isLiked, likes, caption }) => {
     if (ok) {
       //console.log("toggleLike 가 제대로 동작함.");
       console.log(likes, isLiked);
-      cache.writeFragment({
-        id: `Photo:${id}`,
-        fragment: gql`
-          fragment BSName on Photo {
-            isLiked
-            likes
-          }
-        `,
-        data: {
-          isLiked: !isLiked,
-          likes: isLiked ? likes - 1 : likes + 1,
-        },
+      const fragmentId = `Photo:${id}`;
+      const fragment = gql`
+        fragment BSName on Photo {
+          isLiked
+          likes
+        }
+      `;
+      const result = cache.readFragment({
+        id: fragmentId,
+        fragment: fragment,
       });
+      console.log(result);
+      // cache.writeFragment({
+      //   id: fragmentId,
+      //   fragment: fragment,
+      //   data: {
+      //     isLiked: !isLiked,
+      //     likes: isLiked ? likes - 1 : likes + 1,
+      //   },
+      // });
     }
-    console.log(likes, isLiked);
+    //console.log(likes, isLiked);
   };
   const [toggleLikes] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {
