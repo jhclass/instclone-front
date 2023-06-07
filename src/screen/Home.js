@@ -20,7 +20,17 @@ const FEED_QUERY = gql`
       id
       caption
       isMine
-      comments
+      commentNumber
+      comments {
+        id
+        user {
+          username
+          avatar
+        }
+        payload
+        isMine
+        createdAt
+      }
       createdAt
       user {
         username
@@ -53,6 +63,7 @@ const Home = () => {
             likes={photo.likes}
             caption={photo.caption}
             id={photo.id}
+            {...photo}
           />
         ))}
       </PhotoContainer>

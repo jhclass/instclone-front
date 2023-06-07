@@ -13,6 +13,7 @@ import { FatText } from "../shared";
 import Avatar from "../Auth/Avartar";
 import { gql } from "apollo-client-preset";
 import { useMutation } from "@apollo/client";
+import { shape } from "prop-types";
 
 const FeedBox = styled.div`
   padding: 10px;
@@ -54,12 +55,17 @@ const FeedImg = styled.img`
 const FeedCaption = styled(FeedPadding)`
   color: ${(props) => props.theme.fontColor};
 `;
+const FeedComments = styled(FeedPadding)`
+  color: ${(props) => props.theme.fontColor};
+`;
 const SeeDetails = styled.span`
   display: inline-block;
   margin-top: 20px;
   cursor: pointer;
   font-size: 12px;
   color: ${(props) => props.theme.fontColor};
+  padding-bottom: 10px;
+  opacity: 0.7;
 `;
 const PhotoAction = styled.div`
   margin-right: 20px;
@@ -70,6 +76,11 @@ const Likes = styled(FatText)`
   margin-bottom: 10px;
   color: #ff5252;
 `;
+const CommentCount = styled(FeedPadding)`
+  opacity: 0.7;
+  font-size: 12px;
+  margin-top: 10px;
+`;
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
     toggleLike(id: $id) {
@@ -78,7 +89,16 @@ const TOGGLE_LIKE_MUTATION = gql`
     }
   }
 `;
-const Photo = ({ id, username, avatar, file, isLiked, likes, caption }) => {
+const Photo = ({
+  id,
+  username,
+  avatar,
+  file,
+  isLiked,
+  likes,
+  caption,
+  commentNumber,
+}) => {
   // const datachk = (data) => {
   //   console.log(data, "datachk");
   // };
@@ -93,7 +113,7 @@ const Photo = ({ id, username, avatar, file, isLiked, likes, caption }) => {
     //console.log(ok);
     if (ok) {
       //console.log("toggleLike 가 제대로 동작함.");
-      console.log(likes, isLiked);
+      //console.log(likes, isLiked);
       const fragmentId = `Photo:${id}`;
       const fragment = gql`
         fragment BSName on Photo {
@@ -101,19 +121,20 @@ const Photo = ({ id, username, avatar, file, isLiked, likes, caption }) => {
           likes
         }
       `;
-      const result = cache.readFragment({
-        id: fragmentId,
-        fragment: fragment,
-      });
-      console.log(result);
-      // cache.writeFragment({
+      // Photo 컴포넌트안에 arg 가 없어도 readFragment 를 통해서 불러올수 있어
+      // const result = cache.readFragment({
       //   id: fragmentId,
       //   fragment: fragment,
-      //   data: {
-      //     isLiked: !isLiked,
-      //     likes: isLiked ? likes - 1 : likes + 1,
-      //   },
       // });
+      // console.log(result);
+      cache.writeFragment({
+        id: fragmentId,
+        fragment: fragment,
+        data: {
+          isLiked: !isLiked,
+          likes: isLiked ? likes - 1 : likes + 1,
+        },
+      });
     }
     //console.log(likes, isLiked);
   };
@@ -163,11 +184,23 @@ const Photo = ({ id, username, avatar, file, isLiked, likes, caption }) => {
         <span>
           {caption.length > 25 ? `${caption.slice(0, 25)}...` : caption}
         </span>
-        <br />
-        <SeeDetails>
-          <FatText>자세히보기</FatText>
-        </SeeDetails>
       </FeedCaption>
+      <FeedComments>
+        <div>
+          <FatText>{username} &nbsp;</FatText>
+          <span>
+            {caption.length > 25 ? `${caption.slice(0, 25)}...` : caption}
+          </span>
+        </div>
+        <div></div> {/** 대댓글 */}
+      </FeedComments>
+      {commentNumber === 0 ? null : (
+        <CommentCount>{`${commentNumber} 개의 댓글`}</CommentCount>
+      )}
+
+      <SeeDetails>
+        <FatText>자세히보기</FatText>
+      </SeeDetails>
     </FeedBox>
   ) : null;
 };
@@ -180,6 +213,8 @@ Photo.propTypes = {
   isLiked: PropTypes.bool.isRequired,
   likes: PropTypes.number.isRequired,
   caption: PropTypes.string.isRequired,
+  commentNumber: PropTypes.number.isRequired,
+  comments: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 export default Photo;
