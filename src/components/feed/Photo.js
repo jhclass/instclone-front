@@ -14,6 +14,7 @@ import Avatar from "../Auth/Avartar";
 import { gql } from "apollo-client-preset";
 import { useMutation } from "@apollo/client";
 import { shape } from "prop-types";
+import { SmallText } from "../shared";
 
 const FeedBox = styled.div`
   padding: 10px;
@@ -89,6 +90,19 @@ const TOGGLE_LIKE_MUTATION = gql`
     }
   }
 `;
+
+const changedTime = (createdAt) => {
+  const date = new Date(createdAt);
+
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // 월은 0부터 시작하므로 +1을 해줍니다.
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+
+  return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분 ${seconds}초 작성됨.`;
+};
 const Photo = ({
   id,
   username,
@@ -98,11 +112,13 @@ const Photo = ({
   likes,
   caption,
   commentNumber,
+  comments,
 }) => {
   // const datachk = (data) => {
   //   console.log(data, "datachk");
   // };
-  //console.log(id);
+  console.log(comments[0]?.createdAt, "전달전달");
+
   const updateToggleLike = (cache, result) => {
     console.log(cache, result);
     const {
@@ -187,10 +203,16 @@ const Photo = ({
       </FeedCaption>
       <FeedComments>
         <div>
-          <FatText>{username} &nbsp;</FatText>
+          <FatText>{comments[0]?.user.username} &nbsp;</FatText>
           <span>
-            {caption.length > 25 ? `${caption.slice(0, 25)}...` : caption}
+            {comments[0]?.payload.length > 25
+              ? `${caption.slice(0, 25)}...`
+              : comments[0]?.payload}
           </span>
+          <br />
+          <SmallText style={{ marginTop: "5px", display: "inline-block" }}>
+            {changedTime(Number(comments[0]?.createdAt))}
+          </SmallText>
         </div>
         <div></div> {/** 대댓글 */}
       </FeedComments>
@@ -214,7 +236,18 @@ Photo.propTypes = {
   likes: PropTypes.number.isRequired,
   caption: PropTypes.string.isRequired,
   commentNumber: PropTypes.number.isRequired,
-  comments: PropTypes.arrayOf(PropTypes.shape({})),
+  comments: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      user: PropTypes.shape({
+        avatar: PropTypes.string,
+        username: PropTypes.string.isRequired,
+      }),
+      payload: PropTypes.string.isRequired,
+      isMine: PropTypes.bool.isRequired,
+      createdAt: PropTypes.number.isRequired,
+    })
+  ),
 };
 
 export default Photo;

@@ -9,3 +9,8 @@ export const FatText = styled.span`
   font-weight: 600;
   color: ${(props) => props.theme.fontColor};
 `;
+
+export const SmallText = styled.span`
+  opacity: 0.7;
+  font-size: 12px;
+`;
