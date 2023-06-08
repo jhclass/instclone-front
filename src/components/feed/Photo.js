@@ -13,9 +13,8 @@ import { FatText } from "../shared";
 import Avatar from "../Auth/Avartar";
 import { gql } from "apollo-client-preset";
 import { useMutation } from "@apollo/client";
-import { shape } from "prop-types";
-import { SmallText } from "../shared";
-
+import { FeedPadding } from "../shared";
+import Comments from "./Comments";
 const FeedBox = styled.div`
   padding: 10px;
   width: 100%;
@@ -23,9 +22,7 @@ const FeedBox = styled.div`
   margin: 10px;
   border: 1px solid ${(props) => props.theme.borderColor};
 `;
-const FeedPadding = styled.div`
-  padding: 5px 0;
-`;
+
 const FeedHead = styled(FeedPadding)`
   display: flex;
   align-items: center;
@@ -53,12 +50,7 @@ const FeedPhoto = styled(FeedPadding)`
 const FeedImg = styled.img`
   width: 100%;
 `;
-const FeedCaption = styled(FeedPadding)`
-  color: ${(props) => props.theme.fontColor};
-`;
-const FeedComments = styled(FeedPadding)`
-  color: ${(props) => props.theme.fontColor};
-`;
+
 const SeeDetails = styled.span`
   display: inline-block;
   margin-top: 20px;
@@ -91,18 +83,6 @@ const TOGGLE_LIKE_MUTATION = gql`
   }
 `;
 
-const changedTime = (createdAt) => {
-  const date = new Date(createdAt);
-
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1; // 월은 0부터 시작하므로 +1을 해줍니다.
-  const day = date.getDate();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
-
-  return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분 ${seconds}초 작성됨.`;
-};
 const Photo = ({
   id,
   username,
@@ -196,26 +176,8 @@ const Photo = ({
         </div>
       </FeedIcon>
       {likes === 0 ? null : <Likes>{likes} 명의 좋아요가 있습니다.</Likes>}
-      <FeedCaption>
-        <span>
-          {caption.length > 25 ? `${caption.slice(0, 25)}...` : caption}
-        </span>
-      </FeedCaption>
-      <FeedComments>
-        <div>
-          <FatText>{comments[0]?.user.username} &nbsp;</FatText>
-          <span>
-            {comments[0]?.payload.length > 25
-              ? `${caption.slice(0, 25)}...`
-              : comments[0]?.payload}
-          </span>
-          <br />
-          <SmallText style={{ marginTop: "5px", display: "inline-block" }}>
-            {changedTime(Number(comments[0]?.createdAt))}
-          </SmallText>
-        </div>
-        <div></div> {/** 대댓글 */}
-      </FeedComments>
+      <Comments caption={caption} comments={comments} />
+
       {commentNumber === 0 ? null : (
         <CommentCount>{`${commentNumber} 개의 댓글`}</CommentCount>
       )}
@@ -228,7 +190,6 @@ const Photo = ({
 };
 Photo.propTypes = {
   id: PropTypes.number.isRequired,
-
   username: PropTypes.string.isRequired,
   avatar: PropTypes.string,
   file: PropTypes.string.isRequired,
@@ -236,18 +197,6 @@ Photo.propTypes = {
   likes: PropTypes.number.isRequired,
   caption: PropTypes.string.isRequired,
   commentNumber: PropTypes.number.isRequired,
-  comments: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      user: PropTypes.shape({
-        avatar: PropTypes.string,
-        username: PropTypes.string.isRequired,
-      }),
-      payload: PropTypes.string.isRequired,
-      isMine: PropTypes.bool.isRequired,
-      createdAt: PropTypes.number.isRequired,
-    })
-  ),
 };
 
 export default Photo;

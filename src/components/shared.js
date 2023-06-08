@@ -14,3 +14,7 @@ export const SmallText = styled.span`
   opacity: 0.7;
   font-size: 12px;
 `;
+
+export const FeedPadding = styled.div`
+  padding: 5px 0;
+`;
