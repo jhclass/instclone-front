@@ -11,12 +11,20 @@ const Comments = ({ caption, comments }) => {
   return (
     <div>
       <FeedCaption>
-        <span>
+        {/* <span>
           {caption.length > 25 ? `${caption.slice(0, 25)}...` : caption}
-        </span>
+        </span> */}
+        <span
+          dangerouslySetInnerHTML={{
+            __html: caption.replace(
+              /#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w]+/g,
+              "<mark>$&</mark>"
+            ),
+          }}
+        ></span>
       </FeedCaption>
       {comments.map((comment, index) => (
-        <Comment {...comment} key={`${comment.username}+${index}`} />
+        <Comment {...comment} key={comment.id} />
       ))}
     </div>
   );
