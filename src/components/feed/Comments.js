@@ -1,13 +1,15 @@
-import sanitizeHtml from "sanitize-html";
+import React from "react";
+//import sanitizeHtml from "sanitize-html";
 import { PropTypes } from "prop-types";
 import styled from "styled-components";
 import { FeedPadding } from "../shared";
 import Comment from "./Comment";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 const FeedCaption = styled(FeedPadding)`
   color: ${(props) => props.theme.fontColor};
 `;
 const CommentCaption = styled.span`
-  mark {
+  a {
     background-color: inherit;
     color: ${(props) => props.theme.blue};
     cursor: pointer;
@@ -26,23 +28,36 @@ const Comments = ({ caption, comments }) => {
   //       }
   //     )
   //   );
-  const cleanedPayload = sanitizeHtml(
-    caption.replace(/#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w]+/g, "<mark>$&</mark>"),
-    {
-      allowedTags: ["mark"],
-    }
-  );
+  //   const cleanedPayload = sanitizeHtml(
+  //     caption.replace(/#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w]+/g, "<mark>$&</mark>"),
+  //     {
+  //       allowedTags: ["mark"],
+  //     }
+  //   );
   return (
     <div>
       <FeedCaption>
         {/* <span>
           {caption.length > 25 ? `${caption.slice(0, 25)}...` : caption}
         </span> */}
-        <CommentCaption
+        {/* <CommentCaption
           dangerouslySetInnerHTML={{
             __html: cleanedPayload,
           }}
-        ></CommentCaption>
+        ></CommentCaption> */}
+        <CommentCaption>
+          {caption.split(" ").map((word, index) =>
+            /#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w]+/g.test(word) ? (
+              <>
+                <Link to={`/hashtags/${word}`} key={index}>
+                  {word}
+                </Link>{" "}
+              </>
+            ) : (
+              <React.Fragment key={index}>{word} </React.Fragment>
+            )
+          )}
+        </CommentCaption>
       </FeedCaption>
       {comments.map((comment, index) => (
         <Comment {...comment} key={comment.id} />
