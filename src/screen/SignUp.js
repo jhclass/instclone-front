@@ -83,7 +83,6 @@ const SignUp = () => {
     watch,
     formState: { errors },
     getValues,
-    setError,
   } = useForm({ mode: "onChange" });
 
   //console.log(watch());

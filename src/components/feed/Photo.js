@@ -97,7 +97,7 @@ const Photo = ({
   // const datachk = (data) => {
   //   console.log(data, "datachk");
   // };
-  console.log(comments[0]?.createdAt, "전달전달");
+  //console.log(comments[0]?.createdAt, "전달전달");
 
   const updateToggleLike = (cache, result) => {
     console.log(cache, result);
@@ -190,7 +190,7 @@ const Photo = ({
         </div>
       </FeedIcon>
       {likes === 0 ? null : <Likes>{likes} 명의 좋아요가 있습니다.</Likes>}
-      <Comments caption={caption} comments={comments} />
+      <Comments caption={caption} comments={comments} photoId={id} />
 
       {commentNumber === 0 ? null : (
         <CommentCount>{`${commentNumber} 개의 댓글`}</CommentCount>

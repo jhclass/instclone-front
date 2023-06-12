@@ -1,7 +1,6 @@
 import { PropTypes } from "prop-types";
 import styled from "styled-components";
 import { FeedPadding, FatText, SmallText } from "../shared";
-import { useForm } from "react-hook-form";
 
 const FeedComments = styled(FeedPadding)`
   color: ${(props) => props.theme.fontColor};
@@ -20,8 +19,6 @@ const changedTime = (createdAt) => {
   return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분 ${seconds}초 작성됨.`;
 };
 const Comment = ({ user, payload, createdAt }) => {
-  const { register, handleSubmit } = useForm();
-  const onValid = (data) => {};
   return (
     <FeedComments>
       <div>
@@ -35,18 +32,6 @@ const Comment = ({ user, payload, createdAt }) => {
         </SmallText>
       </div>
       <div></div> {/** 대댓글 */}
-      <div>
-        <form onSubmit={handleSubmit(onValid)}>
-          <input
-            {...register("payload", {
-              required: true,
-            })}
-            name="paylaod"
-            type="text"
-            placeholder="코멘트를 작성해주세요."
-          />
-        </form>
-      </div>
     </FeedComments>
   );
 };
