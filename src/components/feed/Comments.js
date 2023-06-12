@@ -48,18 +48,16 @@ const Comments = ({ caption, comments }) => {
         <CommentCaption>
           {caption.split(" ").map((word, index) =>
             /#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w]+/g.test(word) ? (
-              <>
-                <Link to={`/hashtags/${word}`} key={index}>
-                  {word}
-                </Link>{" "}
-              </>
+              <React.Fragment key={index}>
+                <Link to={`/hashtags/${word}`}>{word}</Link>{" "}
+              </React.Fragment>
             ) : (
               <React.Fragment key={index}>{word} </React.Fragment>
             )
           )}
         </CommentCaption>
       </FeedCaption>
-      {comments.map((comment, index) => (
+      {comments.map((comment) => (
         <Comment {...comment} key={comment.id} />
       ))}
     </div>
