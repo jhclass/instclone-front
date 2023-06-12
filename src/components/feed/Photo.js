@@ -111,26 +111,40 @@ const Photo = ({
       //console.log("toggleLike 가 제대로 동작함.");
       //console.log(likes, isLiked);
       const fragmentId = `Photo:${id}`;
-      const fragment = gql`
-        fragment BSName on Photo {
-          isLiked
-          likes
-        }
-      `;
+      cache.modify({
+        id: fragmentId,
+        fields: {
+          isLiked(prev) {
+            return !prev;
+          },
+          likes(prev) {
+            if (isLiked) {
+              return prev - 1;
+            }
+            return prev + 1;
+          },
+        },
+      });
+      // const fragment = gql`
+      //   fragment BSName on Photo {
+      //     isLiked
+      //     likes
+      //   }
+      // `;
       // Photo 컴포넌트안에 arg 가 없어도 readFragment 를 통해서 불러올수 있어
       // const result = cache.readFragment({
       //   id: fragmentId,
       //   fragment: fragment,
       // });
       // console.log(result);
-      cache.writeFragment({
-        id: fragmentId,
-        fragment: fragment,
-        data: {
-          isLiked: !isLiked,
-          likes: isLiked ? likes - 1 : likes + 1,
-        },
-      });
+      // cache.writeFragment({
+      //   id: fragmentId,
+      //   fragment: fragment,
+      //   data: {
+      //     isLiked: !isLiked,
+      //     likes: isLiked ? likes - 1 : likes + 1,
+      //   },
+      // });
     }
     //console.log(likes, isLiked);
   };
