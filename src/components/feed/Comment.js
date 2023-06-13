@@ -28,7 +28,7 @@ const changedTime = (createdAt) => {
 
   return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분 ${seconds}초 작성됨.`;
 };
-const Comment = ({ user, payload, createdAt, id, isMine }) => {
+const Comment = ({ user, payload, createdAt, id, isMine, photoId }) => {
   //console.log(isMine);
   const updateMutation = (cache, result) => {
     const {
@@ -37,8 +37,16 @@ const Comment = ({ user, payload, createdAt, id, isMine }) => {
       },
     } = result;
     if (ok) {
-      console.log(id);
+      console.log(photoId);
       cache.evict({ id: `Comment:${id}` });
+      cache.modify({
+        id: `Photo:${photoId}`,
+        fields: {
+          commentNumber(prev) {
+            return prev - 1;
+          },
+        },
+      });
     }
   };
   const [deleteComentMutation] = useMutation(DELETE_COMMENT_MUTATION, {
@@ -77,6 +85,7 @@ Comment.propTypes = {
   createdAt: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
   isMine: PropTypes.bool.isRequired,
+  photoId: PropTypes.number.isRequired,
 };
 
 export default Comment;
