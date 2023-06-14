@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Wrapper } from "../styles";
 import Photo from "../components/feed/Photo";
 import PageTitle from "../components/PageTitle";
+import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "./fragment";
 
 const PhotoContainer = styled.div`
   display: flex;
@@ -17,30 +18,24 @@ const PhotoContainer = styled.div`
 const FEED_QUERY = gql`
   query seeFeed {
     seeFeed {
-      id
+      ...PhotoFragment
       caption
       isMine
-      commentNumber
+
       comments {
-        id
-        user {
-          username
-          avatar
-        }
-        payload
-        isMine
-        createdAt
+        ...CommentFragment
       }
       createdAt
       user {
         username
         avatar
       }
-      likes
+
       file
-      isLiked
     }
   }
+  ${PHOTO_FRAGMENT}
+  ${COMMENT_FRAGMENT}
 `;
 
 const Home = () => {
