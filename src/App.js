@@ -10,8 +10,9 @@ import SignUp from "./screen/SignUp";
 import Routes from "./screen/routes";
 import { HelmetProvider } from "react-helmet-async";
 import { ApolloProvider } from "@apollo/client";
-
+import Profile from "./screen/Profile";
 import Layout from "./components/Auth/Layout";
+
 function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   const darkModeVar = useReactiveVar(darkThemeVar);
@@ -46,6 +47,16 @@ function App() {
                   <SignUp />
                 )}
               </Route>
+              <Route path={`/user/:username`}>
+                {isLoggedIn ? (
+                  <Layout>
+                    <Profile />
+                  </Layout>
+                ) : (
+                  <Login />
+                )}
+              </Route>
+
               {/*마지막에 넣어주는 것이 중요 404 not found.*/}
               <Route>
                 <NotFound />

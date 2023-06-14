@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FeedPadding, FatText, SmallText } from "../shared";
 import { gql } from "apollo-client-preset";
 import { useMutation } from "@apollo/client";
-
+import { Link } from "react-router-dom/cjs/react-router-dom";
 const DELETE_COMMENT_MUTATION = gql`
   mutation deleteComent($id: Int!) {
     deleteComment(id: $id) {
@@ -61,7 +61,9 @@ const Comment = ({ user, payload, createdAt, id, isMine, photoId }) => {
   return (
     <FeedComments>
       <div>
-        <FatText>{user.username} &nbsp;</FatText>
+        <FatText>
+          <Link to={`/user/${user.username}`}>{user.username} &nbsp;</Link>
+        </FatText>
         <span>
           {payload.length > 25 ? `${payload.slice(0, 25)}...` : payload}
         </span>

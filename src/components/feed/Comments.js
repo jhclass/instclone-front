@@ -123,6 +123,7 @@ const Comments = ({ caption, comments, photoId }) => {
   //       allowedTags: ["mark"],
   //     }
   //   );
+
   return (
     <div>
       <FeedCaption>

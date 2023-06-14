@@ -1,6 +1,7 @@
 import { PropTypes } from "prop-types";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 import {
   faBookmark,
   faComment,
@@ -160,12 +161,16 @@ const Photo = ({
   return file !== null ? (
     <FeedBox>
       <FeedHead>
-        {avatar ? (
-          <Avatar src={avatar} alt={username} />
-        ) : (
-          <Avatar src="./img/defaultUser.png" alt={username} />
-        )}
-        <Username>{username}</Username>
+        <Link to={`/user/${username}`}>
+          {avatar ? (
+            <Avatar src={avatar} alt={username} />
+          ) : (
+            <Avatar src="./img/defaultUser.png" alt={username} />
+          )}
+        </Link>
+        <Username>
+          <Link to={`/user/${username}`}>{username}</Link>
+        </Username>
       </FeedHead>
       <FeedPhoto>
         <FeedImg src={file} alt={username + "의 이미지"} />

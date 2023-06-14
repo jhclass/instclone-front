@@ -61,6 +61,7 @@ const User = styled.div`
 const Header = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   const { data } = useUser();
+
   // console.log("로그인", data?.me?.avatar);
   return (
     <SHeader>
@@ -78,15 +79,20 @@ const Header = () => {
                 {" "}
                 <FontAwesomeIcon icon={faHome} />
                 <FontAwesomeIcon icon={faCompass} />
-                {data?.me?.avatar ? (
-                  <User>
-                    <img src={data?.me?.avatar} alt={data?.me?.username} />
-                  </User>
-                ) : (
-                  <User>
-                    <img src="./img/defaultUser.png" alt={data?.me?.username} />
-                  </User>
-                )}
+                <Link to={`/user/${data?.me?.username}`}>
+                  {data?.me?.avatar ? (
+                    <User>
+                      <img src={data?.me?.avatar} alt={data?.me?.username} />
+                    </User>
+                  ) : (
+                    <User>
+                      <img
+                        src="./img/defaultUser.png"
+                        alt={data?.me?.username}
+                      />
+                    </User>
+                  )}
+                </Link>
               </>
             ) : (
               <Link to={Routes.Login}>
