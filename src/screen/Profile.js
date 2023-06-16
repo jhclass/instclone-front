@@ -32,7 +32,7 @@ const Profile = () => {
     },
   });
 
-  console.log(data);
+  //console.log(data);
   return <>asdfasdf</>;
 };
 export default Profile;

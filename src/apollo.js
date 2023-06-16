@@ -37,7 +37,13 @@ const authLink = new ApolloLink((operation, forward) => {
 export const client = new ApolloClient({
   //uri: "http://localhost:4000/graphql",
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      User: {
+        keyFields: (obj) => `User:${obj.username}`,
+      },
+    },
+  }),
 });
 export const LogUserIn = (token) => {
   localStorage.setItem(TOKEN, token);
