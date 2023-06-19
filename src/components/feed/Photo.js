@@ -17,7 +17,7 @@ import { useMutation } from "@apollo/client";
 import { FeedPadding } from "../shared";
 import Comments from "./Comments";
 const FeedBox = styled.div`
-  padding: 10px;
+  padding: 0px;
   width: 100%;
   max-width: 610px;
   margin: 10px;
@@ -175,35 +175,37 @@ const Photo = ({
       <FeedPhoto>
         <FeedImg src={file} alt={username + "의 이미지"} />
       </FeedPhoto>
-      <FeedIcon>
-        <div>
-          <PhotoAction onClick={toggleLikes}>
-            <FontAwesomeIcon
-              style={{ color: isLiked ? "red" : "inherit" }}
-              icon={isLiked ? SolidHeart : faHeart}
-            />
-          </PhotoAction>
-          <PhotoAction>
-            <FontAwesomeIcon icon={faComment} />
-          </PhotoAction>
-          <PhotoAction>
-            <FontAwesomeIcon icon={faPaperPlane} />
-          </PhotoAction>
-        </div>
-        <div>
-          <FontAwesomeIcon icon={faBookmark} />
-        </div>
-      </FeedIcon>
-      {likes === 0 ? null : <Likes>{likes} 명의 좋아요가 있습니다.</Likes>}
-      <Comments caption={caption} comments={comments} photoId={id} />
+      <div style={{ padding: "0 10px" }}>
+        <FeedIcon>
+          <div>
+            <PhotoAction onClick={toggleLikes}>
+              <FontAwesomeIcon
+                style={{ color: isLiked ? "red" : "inherit" }}
+                icon={isLiked ? SolidHeart : faHeart}
+              />
+            </PhotoAction>
+            <PhotoAction>
+              <FontAwesomeIcon icon={faComment} />
+            </PhotoAction>
+            <PhotoAction>
+              <FontAwesomeIcon icon={faPaperPlane} />
+            </PhotoAction>
+          </div>
+          <div>
+            <FontAwesomeIcon icon={faBookmark} />
+          </div>
+        </FeedIcon>
+        {likes === 0 ? null : <Likes>{likes} 명의 좋아요가 있습니다.</Likes>}
+        <Comments caption={caption} comments={comments} photoId={id} />
 
-      {commentNumber === 0 ? null : (
-        <CommentCount>{`${commentNumber} 개의 댓글`}</CommentCount>
-      )}
+        {commentNumber === 0 ? null : (
+          <CommentCount>{`${commentNumber} 개의 댓글`}</CommentCount>
+        )}
 
-      <SeeDetails>
-        <FatText>자세히보기</FatText>
-      </SeeDetails>
+        <SeeDetails>
+          <FatText>자세히보기</FatText>
+        </SeeDetails>
+      </div>
     </FeedBox>
   ) : null;
 };

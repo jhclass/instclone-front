@@ -53,9 +53,9 @@ const User = styled.div`
   border-radius: 100%;
   overflow: hidden;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-  img {
-    width: 100%;
-  }
+  background-image: url(${(props) => props.bg});
+  background-size: cover;
+  background-position: center center;
 `;
 
 const Header = () => {
@@ -81,16 +81,9 @@ const Header = () => {
                 <FontAwesomeIcon icon={faCompass} />
                 <Link to={`/user/${data?.me?.username}`}>
                   {data?.me?.avatar ? (
-                    <User>
-                      <img src={data?.me?.avatar} alt={data?.me?.username} />
-                    </User>
+                    <User bg={data?.me?.avatar} />
                   ) : (
-                    <User>
-                      <img
-                        src="./img/defaultUser.png"
-                        alt={data?.me?.username}
-                      />
-                    </User>
+                    <User bg="./img/defaultUser.png" />
                   )}
                 </Link>
               </>
