@@ -1,13 +1,14 @@
 import { gql } from "apollo-client-preset";
 import { useParams } from "react-router-dom";
 import { PHOTO_FRAGMENT } from "./fragment";
-import { useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { FatText } from "../components/shared";
 import { faHeart, faComment } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RegButton from "../components/Auth/RegButton";
 import styled from "styled-components";
 import PageTitle from "../components/PageTitle";
+import useUser from "../hooks/useUser";
 const SEE_PROFILE_QUERY = gql`
   query seeProfile($username: String!) {
     seeProfile(username: $username) {
@@ -138,37 +139,92 @@ const RegButtons = styled(RegButton).attrs({
 
 const Profile = () => {
   const { username } = useParams();
+  const { data: userData } = useUser();
+  //update로만 캐시에 접근할 수 있는 것은 아니다. useAolloClient()를 사용하고 client 에 있는 캐시를 불러올 수 있다는 말이지
+  const client = useApolloClient();
+  //console.log(userData?.me?.username);
   const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
     variables: {
       username,
     },
   });
   //console.log(data);
+
+  const unfollowUserUpdate = (cache, result) => {
+    //console.log(result, "result");
+    const {
+      data: {
+        unfollowUser: { ok },
+      },
+    } = result;
+    if (!ok) {
+      return;
+    }
+    cache.modify({
+      id: `User:${username}`,
+      fields: {
+        isFollowing(prev) {
+          return false;
+        },
+        totalFollower(prev) {
+          return prev - 1;
+        },
+      },
+    });
+    const { me } = userData;
+    cache.modify({
+      id: `User:${me.username}`,
+      fields: {
+        totalFollowing(prev) {
+          return prev - 1;
+        },
+      },
+    });
+  };
+
+  const followUserCompleted = (data) => {
+    console.log(data);
+    const {
+      followUser: { ok },
+    } = data;
+    if (!ok) {
+      return;
+    }
+    //useApolloClien() 를 사용하면 어디서든 cache 를 불러올수 있지.
+    const { cache } = client;
+    cache.modify({
+      id: `User:${username}`,
+      fields: {
+        isFollowing(prev) {
+          return true;
+        },
+        totalFollower(prev) {
+          return prev + 1;
+        },
+      },
+    });
+    const { me } = userData;
+    cache.modify({
+      id: `User:${me.username}`,
+      fields: {
+        totalFollowing(prev) {
+          return prev + 1;
+        },
+      },
+    });
+  };
   const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
     variables: {
       username,
     },
-    refetchQueries: [
-      {
-        query: SEE_PROFILE_QUERY,
-        variables: {
-          username,
-        },
-      },
-    ],
+    update: unfollowUserUpdate,
   });
+
   const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
     variables: {
       username,
     },
-    refetchQueries: [
-      {
-        query: SEE_PROFILE_QUERY,
-        variables: {
-          username,
-        },
-      },
-    ],
+    onCompleted: followUserCompleted,
   });
   //console.log(data);
   const getButton = (data) => {
