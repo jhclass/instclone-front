@@ -1,7 +1,7 @@
 import { gql } from "apollo-client-preset";
 import { useParams } from "react-router-dom";
 import { PHOTO_FRAGMENT } from "./fragment";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { FatText } from "../components/shared";
 import { faHeart, faComment } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -143,20 +143,46 @@ const Profile = () => {
       username,
     },
   });
-
-  console.log(data);
+  //console.log(data);
+  const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
+    variables: {
+      username,
+    },
+    refetchQueries: [
+      {
+        query: SEE_PROFILE_QUERY,
+        variables: {
+          username,
+        },
+      },
+    ],
+  });
+  const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
+    variables: {
+      username,
+    },
+    refetchQueries: [
+      {
+        query: SEE_PROFILE_QUERY,
+        variables: {
+          username,
+        },
+      },
+    ],
+  });
+  //console.log(data);
   const getButton = (data) => {
     const {
       seeProfile: { isMe, isFollowing },
     } = data;
-    console.log(isFollowing);
+    //console.log(isFollowing);
     if (isMe) {
       return <RegButtons>Edit Profile</RegButtons>;
     }
     if (isFollowing) {
-      return <RegButtons>Unfollow</RegButtons>;
+      return <RegButtons onClick={unfollowUser}>Unfollow</RegButtons>;
     } else {
-      return <RegButtons>Follower</RegButtons>;
+      return <RegButtons onClick={followUser}>Follower</RegButtons>;
     }
   };
   return (
